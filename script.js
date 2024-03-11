@@ -38,8 +38,11 @@ const gameBoard = {
 };
 
 const gameLogic = {
+  currentPlayer: null,
+  winningState: false,
+
   setToken(cell) {
-    let currentPlayer =
+    this.currentPlayer =
       players.p1.tokenCllct.length <= players.p2.tokenCllct.length
         ? players.p1
         : players.p2;
@@ -52,14 +55,30 @@ const gameLogic = {
       return;
     } else {
       console.log(`You picked ${cell}`);
-      currentPlayer.tokenCllct.push(cell);
+      this.currentPlayer.tokenCllct.push(cell);
       console.log(
-        `Your current token collecion is : ${currentPlayer.tokenCllct}`
+        `Your current token collecion is : ${this.currentPlayer.tokenCllct}`
       );
     }
   },
 
+  checkWinner() {
+    for (let i = 0; i < gameBoard.winningCombination.length; i++) {
+      const isPlayerWinner = gameBoard.winningCombination[i].every((num) =>
+        this.currentPlayer.tokenCllct.includes(num)
+      );
+
+      if (isPlayerWinner) {
+        this.winningState = true;
+        console.log(`${this.currentPlayer.name} wins`);
+        break;
+      }
+    }
+
+    return this.winningState;
+  },
+
   playRound() {},
 
-  checkWinner() {},
+  endGame() {},
 };
