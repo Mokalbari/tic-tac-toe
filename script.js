@@ -41,12 +41,14 @@ const gameLogic = {
   currentPlayer: null,
   winningState: false,
 
-  setToken(cell) {
+  setCurrentPlayer() {
     this.currentPlayer =
       players.p1.tokenCllct.length <= players.p2.tokenCllct.length
         ? players.p1
         : players.p2;
+  },
 
+  setToken(cell) {
     if (
       players.p1.tokenCllct.includes(cell) ||
       players.p2.tokenCllct.includes(cell)
@@ -70,7 +72,6 @@ const gameLogic = {
 
       if (isPlayerWinner) {
         this.winningState = true;
-        console.log(`${this.currentPlayer.name} wins`);
         break;
       }
     }
@@ -78,7 +79,21 @@ const gameLogic = {
     return this.winningState;
   },
 
-  playRound() {},
+  endGame() {
+    if (this.winningState) {
+      console.log(`${this.currentPlayer.name} won the game`);
+      players.p1.counter = 0;
+      players.p1.tokenCllct = [];
+      players.p2.counter = 0;
+      players.p2.tokenCllct = [];
+      this.winningState = false;
+    }
+  },
+};
 
-  endGame() {},
+const playRound = () => {
+  gameLogic.setCurrentPlayer();
+  gameLogic.setToken(+prompt("Enter a cell"));
+  gameLogic.checkWinner();
+  gameLogic.endGame();
 };
