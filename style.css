@@ -137,3 +137,59 @@ textarea:not([rows]) {
   --fw-m: 500;
   --fw-l: 800;
 }
+
+/* ************** */
+/* END OF ROOT SELECTOR */
+/* ************** */
+/* ************** */
+/* GLOBAL STYLING */
+/* ************** */
+
+main {
+  background-color: var(--clr-neutral-900);
+}
+
+.container {
+  color: var(--clr-main-100);
+  height: 100svh;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+
+  h1 {
+    font-family: var(--ff-header);
+    font-size: calc(var(--s2) * 2);
+  }
+
+  h2 {
+    font-family: var(--ff-main);
+  }
+
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: var(--s075);
+    justify-items: center;
+    align-items: center;
+
+    .cell {
+      color: var(--clr-neutral-900);
+      padding: calc(var(--s2) * 2);
+      background-color: var(--clr-neutral-100);
+      border-radius: var(--s1);
+      font-family: var(--ff-ttt);
+      font-weight: var(--fw-l);
+      font-size: var(--s3);
+      cursor: pointer;
+    }
+  }
+}
+
+#restart-game-btn {
+  padding: var(--s1) var(--s075);
+  border: none;
+  border-radius: var(--s1);
+  cursor: pointer;
+  font-family: var(--ff-main);
+}
