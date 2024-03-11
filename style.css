@@ -1,3 +1,139 @@
-h1 {
-  color: red;
+/* ************** */
+/* CSS RESET */
+/* ************** */
+/* Box sizing rules */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Prevent font size inflation */
+html {
+  -moz-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+}
+
+/* Remove default margin in favour of better control in authored CSS */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin-block-end: 0;
+}
+
+/* Remove & styles on ul, ol elements with a list role, which suggests default styling will be removed */
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+}
+
+/* Set core body defaults */
+body {
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+/* Set shorter line heights on headings and interactive elements */
+h1,
+h2,
+h3,
+h4,
+button,
+input,
+label {
+  line-height: 1.1;
+}
+
+/* Balance text wrapping on headings */
+h1,
+h2,
+h3,
+h4 {
+  text-decoration: n;
+  text-wrap: balance;
+}
+
+/* A elements that don't have a class get default styles */
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+  color: currentColor;
+}
+
+/* Make images easier to work with */
+img,
+picture {
+  max-width: 100%;
+  display: block;
+}
+
+/* Inherit fonts for inputs and buttons */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Make sure textareas without a rows attribute are not tiny */
+textarea:not([rows]) {
+  min-height: 10em;
+}
+
+/* Anything that has been anchored to should have extra scroll margin */
+:target {
+  scroll-margin-block: 5ex;
+}
+
+/* ************** */
+/* END OF CSS RESET */
+/* ************** */
+/* ************** */
+/* ROOT SELECTOR */
+/* ************** */
+
+:root {
+  /* Mains colors */
+  --clr-main-900: #252a34;
+  --clr-main-100: #eaeaea;
+  --clr-accent-blue: #00adb5;
+  --clr-accent-red: #ff2e63;
+
+  --clr-neutral-900: #020617;
+  --clr-neutral-500: #64748b;
+  --clr-neutral-100: #f1f5f9;
+
+  /* Spaces */
+  --s025: 0.25rem;
+  --s050: 0.5rem;
+  --s075: 0.75rem;
+  --s090: 0.9rem;
+  --s1: 1rem;
+  --s11: 1.1rem;
+  --s15: 1.5rem;
+  --s2: 2rem;
+  --s25: 2.5rem;
+  --s3: 3rem;
+
+  /* Fonts */
+  --ff-header: "Anton", Arial, sans-serif;
+  --ff-main: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --ff-ttt: "Indie Flower", cursive;
+
+  /* Weight */
+  --fw-xs: 300;
+  --fw-s: 400;
+  --fw-m: 500;
+  --fw-l: 800;
 }
