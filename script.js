@@ -12,13 +12,13 @@ const gameApp = (() => {
     p1: {
       name: "Player One",
       token: "X",
-      tokenCllct: [],
+      tokenCollection: [],
     },
 
     p2: {
       name: "Player Two",
       token: "O",
-      tokenCllct: [],
+      tokenCollection: [],
     },
 
     updateName() {
@@ -52,40 +52,46 @@ const gameApp = (() => {
     ],
   };
 
-  const gameLogicElements = {
+  const gameMechanics = {
     currentPlayer: null,
     challenger: null,
     winningState: false,
 
     setCurrentPlayer() {
+      // As a turn-based-game, the current player is the one with the smallest tokenCollection.
+      // In case of a tie, player 1 will be the one going.
       this.currentPlayer =
-        players.p1.tokenCllct.length <= players.p2.tokenCllct.length
+        players.p1.tokenCollection.length <= players.p2.tokenCollection.length
           ? players.p1
           : players.p2;
 
       this.challenger =
-        players.p1.tokenCllct.length <= players.p2.tokenCllct.length
+        players.p1.tokenCollection.length <= players.p2.tokenCollection.length
           ? players.p2
           : players.p1;
     },
 
-    pushTokenToCllct(cell) {
+    pushTokenToCollection(cell) {
+      //Prevents duplicates before pushing a token which would break the game.
       if (
-        players.p1.tokenCllct.includes(cell) ||
-        players.p2.tokenCllct.includes(cell)
+        players.p1.tokenCollection.includes(cell) ||
+        players.p2.tokenCollection.includes(cell)
       ) {
         return;
       } else {
-        this.currentPlayer.tokenCllct.push(cell);
+        this.currentPlayer.tokenCollection.push(cell);
       }
     },
 
     getPlayerToken() {
+      //Stores the current token inside a variable for modularity
       let token = this.currentPlayer.token;
       return token;
     },
 
     checkWinner(a, b) {
+      // a is the winningCombination, b is the currentPlayer tokenCollection.
+      // The winning state will be true if a player has an array that matches the winningCombination.
       for (let i = 0; i < a.length; i++) {
         if (a[i].every((num) => b.includes(num))) {
           this.winningState = true;
@@ -95,13 +101,15 @@ const gameApp = (() => {
     },
 
     resetGame() {
-      players.p1.tokenCllct = [];
-      players.p2.tokenCllct = [];
+      players.p1.tokenCollection = [];
+      players.p2.tokenCollection = [];
       this.winningState = false;
     },
 
     tieGame() {
-      if (players.p1.tokenCllct.length === 5 && !this.winningState) {
+      // As soon as p1 reaches 5 items inside his tokenCollection,
+      // the game should end by a tie or a victory of p1
+      if (players.p1.tokenCollection.length === 5 && !this.winningState) {
         messages.tieGame();
       }
     },
@@ -109,15 +117,15 @@ const gameApp = (() => {
 
   const messages = {
     initialMessage() {
-      DOM.stateMessage.textContent = `${players.p1.name} turn`;
+      DOM.stateMessage.textContent = `${players.p1.name}'s turn. ${players.p1.name} will play "X". ${players.p2.name} will play "O"`;
     },
 
     gameWin() {
-      DOM.stateMessage.textContent = `${gameLogicElements.currentPlayer.name} won the game.`;
+      DOM.stateMessage.textContent = `${gameMechanics.currentPlayer.name} won the game.`;
     },
 
     playerTurn() {
-      DOM.stateMessage.textContent = `${gameLogicElements.currentPlayer.name} has played. ${gameLogicElements.challenger.name} is up.`;
+      DOM.stateMessage.textContent = `${gameMechanics.currentPlayer.name} has played. ${gameMechanics.challenger.name} is up.`;
     },
 
     tieGame() {
@@ -127,48 +135,48 @@ const gameApp = (() => {
 
   const gameUnfolding = {
     attemptPlay(event) {
-      if (event.target.textContent !== "") return;
+      if (event.target.textContent !== "") return; //Prevents clicking multiple times on a cell and switching players.
 
       if (event.target.matches(".cell")) {
+        //Prevents clicking in-between the cells and breaking the game.
         const targetID = +event.target.id;
 
-        gameLogicElements.pushTokenToCllct(targetID);
-        event.target.textContent = gameLogicElements.getPlayerToken();
+        gameMechanics.pushTokenToCollection(targetID);
+        event.target.textContent = gameMechanics.getPlayerToken();
 
-        gameLogicElements.checkWinner(
+        gameMechanics.checkWinner(
           gameBoard.winningCombination,
-          gameLogicElements.currentPlayer.tokenCllct
+          gameMechanics.currentPlayer.tokenCollection
         );
 
-        gameLogicElements.winningState
-          ? messages.gameWin()
-          : messages.playerTurn();
+        gameMechanics.winningState ? messages.gameWin() : messages.playerTurn();
       }
     },
 
     restartGame() {
-      gameLogicElements.resetGame();
+      gameMechanics.resetGame();
       DOM.gridContainer.textContent = "";
       appendGrid();
       messages.initialMessage();
     },
 
     gameFlow(event) {
-      gameLogicElements.setCurrentPlayer();
+      //This sums up the entire game.
+      gameMechanics.setCurrentPlayer();
 
-      if (gameLogicElements.winningState) {
+      if (gameMechanics.winningState) {
         this.restartGame();
         return;
       }
 
       this.attemptPlay(event);
-      gameLogicElements.tieGame();
+      gameMechanics.tieGame();
     },
   };
 
   const appendGrid = () => {
     for (let i = 0; i < 9; i++) {
-      let div = document.createElement("div");
+      const div = document.createElement("div");
       div.setAttribute("class", "cell");
       div.setAttribute("id", gameBoard.cells[i].id);
       DOM.gridContainer.appendChild(div);
@@ -189,6 +197,9 @@ const gameApp = (() => {
     });
 
     DOM.formInput.addEventListener("submit", (event) => {
+      // If a name is updated, to prevent switching turns between p1/p2
+      // The game restarts
+      // The form isn't link to a database. Only there for dynamic name changing.
       event.preventDefault();
       players.updateName();
       DOM.modal.close();
