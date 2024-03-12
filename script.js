@@ -54,7 +54,7 @@ const gameApp = (() => {
           ? players.p1
           : players.p2;
 
-      this.notCurrentPlayer =
+      this.challenger =
         players.p1.tokenCllct.length <= players.p2.tokenCllct.length
           ? players.p2
           : players.p1;
@@ -90,6 +90,12 @@ const gameApp = (() => {
       players.p2.tokenCllct = [];
       this.winningState = false;
     },
+
+    tieGame() {
+      if (players.p1.tokenCllct.length === 5) {
+        messages.tieGame();
+      }
+    },
   };
 
   const messages = {
@@ -102,7 +108,7 @@ const gameApp = (() => {
     },
 
     playerTurn() {
-      DOM.stateMessage.innerHTML = `${gameLogic.currentPlayer.name} has played. ${gameLogic.notCurrentPlayer.name} is up.`;
+      DOM.stateMessage.innerHTML = `${gameLogic.currentPlayer.name} has played. ${gameLogic.challenger.name} is up.`;
     },
 
     tieGame() {
@@ -140,12 +146,6 @@ const gameApp = (() => {
     gameLogic.winningState ? messages.gameWin() : messages.playerTurn();
   };
 
-  const tieGame = () => {
-    if (players.p1.tokenCllct.length === 5) {
-      messages.tieGame();
-    }
-  };
-
   const gameFlow = (event) => {
     gameLogic.setCurrentPlayer();
 
@@ -155,7 +155,7 @@ const gameApp = (() => {
     }
 
     attemptPlay(event);
-    tieGame();
+    gameLogic.tieGame();
   };
 
   const setupEventListener = () => {
