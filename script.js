@@ -52,7 +52,7 @@ const gameApp = (() => {
     ],
   };
 
-  const gameLogic = {
+  const gameLogicElements = {
     currentPlayer: null,
     challenger: null,
     winningState: false,
@@ -113,15 +113,56 @@ const gameApp = (() => {
     },
 
     gameWin() {
-      DOM.stateMessage.textContent = `${gameLogic.currentPlayer.name} won the game.`;
+      DOM.stateMessage.textContent = `${gameLogicElements.currentPlayer.name} won the game.`;
     },
 
     playerTurn() {
-      DOM.stateMessage.textContent = `${gameLogic.currentPlayer.name} has played. ${gameLogic.challenger.name} is up.`;
+      DOM.stateMessage.textContent = `${gameLogicElements.currentPlayer.name} has played. ${gameLogicElements.challenger.name} is up.`;
     },
 
     tieGame() {
       DOM.stateMessage.textContent = `It's a tie!`;
+    },
+  };
+
+  const gameUnfolding = {
+    attemptPlay(event) {
+      if (event.target.textContent !== "") return;
+
+      if (event.target.matches(".cell")) {
+        const targetID = +event.target.id;
+
+        gameLogicElements.pushTokenToCllct(targetID);
+        event.target.textContent = gameLogicElements.getPlayerToken();
+
+        gameLogicElements.checkWinner(
+          gameBoard.winningCombination,
+          gameLogicElements.currentPlayer.tokenCllct
+        );
+
+        gameLogicElements.winningState
+          ? messages.gameWin()
+          : messages.playerTurn();
+      }
+    },
+
+    restartGame() {
+      gameLogicElements.resetGame();
+      DOM.gridContainer.textContent = "";
+      appendGrid();
+      messages.initialMessage();
+    },
+
+    gameFlow(event) {
+      gameLogicElements.setCurrentPlayer();
+
+      if (gameLogicElements.winningState) {
+        this.restartGame();
+        return;
+      }
+
+      this.attemptPlay(event);
+      gameLogicElements.tieGame();
     },
   };
 
@@ -134,48 +175,13 @@ const gameApp = (() => {
     }
   };
 
-  const restartGame = () => {
-    gameLogic.resetGame();
-    DOM.gridContainer.textContent = "";
-    appendGrid();
-    messages.initialMessage();
-  };
-
-  const attemptPlay = (event) => {
-    if (event.target.textContent !== "") return;
-
-    if (event.target.matches(".cell")) {
-      const targetID = +event.target.id;
-      gameLogic.pushTokenToCllct(targetID);
-      event.target.textContent = gameLogic.getPlayerToken();
-      gameLogic.checkWinner(
-        gameBoard.winningCombination,
-        gameLogic.currentPlayer.tokenCllct
-      );
-
-      gameLogic.winningState ? messages.gameWin() : messages.playerTurn();
-    }
-  };
-
-  const gameFlow = (event) => {
-    gameLogic.setCurrentPlayer();
-
-    if (gameLogic.winningState) {
-      restartGame();
-      return;
-    }
-
-    attemptPlay(event);
-    gameLogic.tieGame();
-  };
-
   const setupEventListener = () => {
     DOM.restartButton.addEventListener("click", () => {
-      restartGame();
+      gameUnfolding.restartGame();
     });
 
     DOM.gridContainer.addEventListener("click", (event) => {
-      gameFlow(event);
+      gameUnfolding.gameFlow(event);
     });
 
     DOM.openModal.addEventListener("click", () => {
@@ -186,7 +192,7 @@ const gameApp = (() => {
       event.preventDefault();
       players.updateName();
       DOM.modal.close();
-      restartGame();
+      gameUnfolding.restartGame();
     });
   };
 
@@ -198,5 +204,3 @@ const gameApp = (() => {
 })();
 
 document.addEventListener("DOMContentLoaded", gameApp.init);
-
-//
