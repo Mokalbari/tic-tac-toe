@@ -1,3 +1,9 @@
+const DOM = {
+  gridContainer: document.querySelector(".grid-container"),
+  stateMessage: document.querySelector("#state-msg"),
+  restartButton: document.querySelector("#restart-game-btn"),
+};
+
 const players = {
   p1: {
     name: "Player One",
@@ -25,15 +31,15 @@ const gameBoard = {
   ],
 
   cells: [
-    { name: "top-left", id: 1 },
-    { name: "top-middle", id: 2 },
-    { name: "top-right", id: 3 },
-    { name: "middle-left", id: 4 },
-    { name: "middle-middle", id: 5 },
-    { name: "middle-right", id: 6 },
-    { name: "bottom-left", id: 7 },
-    { name: "bottom-middle", id: 8 },
-    { name: "bottom-right", id: 9 },
+    { id: 1 },
+    { id: 2 },
+    { id: 3 },
+    { id: 4 },
+    { id: 5 },
+    { id: 6 },
+    { id: 7 },
+    { id: 8 },
+    { id: 9 },
   ],
 };
 
@@ -53,47 +59,50 @@ const gameLogic = {
       players.p1.tokenCllct.includes(cell) ||
       players.p2.tokenCllct.includes(cell)
     ) {
-      console.log(`${cell} already picked`);
       return;
     } else {
-      console.log(`You picked ${cell}`);
       this.currentPlayer.tokenCllct.push(cell);
-      console.log(
-        `Your current token collecion is : ${this.currentPlayer.tokenCllct}`
-      );
     }
   },
 
-  checkWinner() {
-    for (let i = 0; i < gameBoard.winningCombination.length; i++) {
-      const isPlayerWinner = gameBoard.winningCombination[i].every((num) =>
-        this.currentPlayer.tokenCllct.includes(num)
-      );
-
-      if (isPlayerWinner) {
+  checkWinner(a, b) {
+    for (let i = 0; i < a.length; i++) {
+      if (a[i].every((num) => b.includes(num.toString()))) {
         this.winningState = true;
-        break;
+        return;
       }
     }
-
-    return this.winningState;
   },
 
-  endGame() {
-    if (this.winningState) {
-      console.log(`${this.currentPlayer.name} won the game`);
-      players.p1.counter = 0;
-      players.p1.tokenCllct = [];
-      players.p2.counter = 0;
-      players.p2.tokenCllct = [];
-      this.winningState = false;
+  resetGame() {
+    players.p1.tokenCllct = [];
+    players.p2.tokenCllct = [];
+    this.winningState = false;
+  },
+};
+
+const appendGrid = (() => {
+  for (let i = 0; i < 9; i++) {
+    let div = document.createElement("div");
+    div.setAttribute("class", "cell");
+    div.setAttribute("id", gameBoard.cells[i].id);
+    DOM.gridContainer.appendChild(div);
+  }
+})();
+
+DOM.gridContainer.addEventListener("click", (event) => {
+  const playRound = () => {
+    if (gameLogic.winningState === true) {
+      gameLogic.resetGame();
+    } else {
+      gameLogic.setCurrentPlayer();
+      gameLogic.setToken(event.target.id);
+      gameLogic.checkWinner(
+        gameBoard.winningCombination,
+        gameLogic.currentPlayer.tokenCllct
+      );
     }
-  },
-};
+  };
 
-const playRound = () => {
-  gameLogic.setCurrentPlayer();
-  gameLogic.setToken(+prompt("Enter a cell"));
-  gameLogic.checkWinner();
-  gameLogic.endGame();
-};
+  playRound();
+});
