@@ -104,6 +104,10 @@ const gameApp = (() => {
     playerTurn() {
       DOM.stateMessage.innerHTML = `${gameLogic.currentPlayer.name} has played. ${gameLogic.notCurrentPlayer.name} is up.`;
     },
+
+    tieGame() {
+      DOM.stateMessage.innerHTML = `It's a tie!`;
+    },
   };
 
   const appendGrid = () => {
@@ -116,12 +120,10 @@ const gameApp = (() => {
   };
 
   const restartGame = () => {
-    DOM.restartButton.addEventListener("click", () => {
-      gameLogic.resetGame();
-      DOM.gridContainer.innerHTML = "";
-      appendGrid();
-      messages.initialMessage();
-    });
+    gameLogic.resetGame();
+    DOM.gridContainer.innerHTML = "";
+    appendGrid();
+    messages.initialMessage();
   };
 
   const attemptPlay = (event) => {
@@ -138,22 +140,36 @@ const gameApp = (() => {
     gameLogic.winningState ? messages.gameWin() : messages.playerTurn();
   };
 
-  const gameFlow = () => {
+  const tieGame = () => {
+    if (players.p1.tokenCllct.length === 5) {
+      messages.tieGame();
+    }
+  };
+
+  const gameFlow = (event) => {
+    gameLogic.setCurrentPlayer();
+
+    if (gameLogic.winningState) {
+      restartGame();
+      return;
+    }
+
+    attemptPlay(event);
+    tieGame();
+  };
+
+  const setupEventListener = () => {
+    DOM.restartButton.addEventListener("click", () => {
+      restartGame();
+    });
     DOM.gridContainer.addEventListener("click", (event) => {
-      gameLogic.setCurrentPlayer();
-
-      if (gameLogic.winningState) {
-        restartGame();
-        return;
-      }
-
-      attemptPlay(event);
+      gameFlow(event);
     });
   };
 
   return {
     init: () => {
-      appendGrid(), gameFlow(), restartGame();
+      appendGrid(), setupEventListener();
     },
   };
 })();
