@@ -182,6 +182,11 @@ main {
       font-weight: var(--fw-l);
       font-size: var(--s3);
       cursor: pointer;
+      width: var(--s2);
+      height: var(--s2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   }
 }
