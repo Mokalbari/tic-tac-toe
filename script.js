@@ -54,6 +54,7 @@ const gameApp = (() => {
 
   const gameLogic = {
     currentPlayer: null,
+    challenger: null,
     winningState: false,
 
     setCurrentPlayer() {
@@ -100,9 +101,7 @@ const gameApp = (() => {
     },
 
     tieGame() {
-      // Turn-based game. Total cell is 9.
-      // If p1 is 5, then p2 must be 4, so it's a tie.
-      if (players.p1.tokenCllct.length === 5) {
+      if (players.p1.tokenCllct.length === 5 && !this.winningState) {
         messages.tieGame();
       }
     },
