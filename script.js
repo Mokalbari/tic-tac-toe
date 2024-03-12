@@ -92,6 +92,8 @@ const gameApp = (() => {
     },
 
     tieGame() {
+      // Turn-based game. Total cell is 9.
+      // If p1 is 5, then p2 must be 4, so it's a tie.
       if (players.p1.tokenCllct.length === 5) {
         messages.tieGame();
       }
@@ -100,19 +102,19 @@ const gameApp = (() => {
 
   const messages = {
     initialMessage() {
-      DOM.stateMessage.innerHTML = `Player One turn`;
+      DOM.stateMessage.textContent = `Player One turn`;
     },
 
     gameWin() {
-      DOM.stateMessage.innerHTML = `${gameLogic.currentPlayer.name} won the game.`;
+      DOM.stateMessage.textContent = `${gameLogic.currentPlayer.name} won the game.`;
     },
 
     playerTurn() {
-      DOM.stateMessage.innerHTML = `${gameLogic.currentPlayer.name} has played. ${gameLogic.challenger.name} is up.`;
+      DOM.stateMessage.textContent = `${gameLogic.currentPlayer.name} has played. ${gameLogic.challenger.name} is up.`;
     },
 
     tieGame() {
-      DOM.stateMessage.innerHTML = `It's a tie!`;
+      DOM.stateMessage.textContent = `It's a tie!`;
     },
   };
 
@@ -127,23 +129,27 @@ const gameApp = (() => {
 
   const restartGame = () => {
     gameLogic.resetGame();
-    DOM.gridContainer.innerHTML = "";
+    DOM.gridContainer.textContent = "";
     appendGrid();
     messages.initialMessage();
   };
 
   const attemptPlay = (event) => {
-    if (event.target.innerHTML !== "") return;
+    if (event.target.textContent !== "") return;
 
-    const targetID = +event.target.id;
-    gameLogic.pushTokenToCllct(targetID);
-    event.target.innerHTML = gameLogic.getPlayerToken();
-    gameLogic.checkWinner(
-      gameBoard.winningCombination,
-      gameLogic.currentPlayer.tokenCllct
-    );
+    if (event.target.matches(".cell")) {
+      const targetID = +event.target.id;
+      gameLogic.pushTokenToCllct(targetID);
+      event.target.textContent = gameLogic.getPlayerToken();
+      gameLogic.checkWinner(
+        gameBoard.winningCombination,
+        gameLogic.currentPlayer.tokenCllct
+      );
 
-    gameLogic.winningState ? messages.gameWin() : messages.playerTurn();
+      gameLogic.winningState ? messages.gameWin() : messages.playerTurn();
+    } else {
+      return;
+    }
   };
 
   const gameFlow = (event) => {
