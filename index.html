@@ -18,8 +18,30 @@
         <h1>Tic-Tac-Toe</h1>
         <div class="grid-container"></div>
         <h2 id="state-msg">Player One turn</h2>
-        <button id="restart-game-btn">Restart Game</button>
+        <div class="btn-container">
+          <button class="btn" id="restart-game-btn">Restart Game</button>
+          <button class="btn" id="open-modal">Change name</button>
+        </div>
       </div>
     </main>
+
+    <aside>
+      <dialog id="player-name-modal">
+        <form action="#" method="post" id="player-custom-name">
+          <div class="grid-container-modal">
+            <div class="field-container">
+              <label for="p1-name">Player 1 name :</label>
+              <input type="text" name="name" id="p1-name" value="Player One" />
+            </div>
+            <div class="field-container">
+              <label for="p2-name">Player 2 name :</label>
+              <input type="text" name="name" id="p2-name" value="Player Two" />
+            </div>
+            <button class="btn" type="reset">Reset</button>
+            <button class="btn" type="submit">Submit</button>
+          </div>
+        </form>
+      </dialog>
+    </aside>
   </body>
 </html>

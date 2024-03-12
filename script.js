@@ -3,6 +3,9 @@ const gameApp = (() => {
     gridContainer: document.querySelector(".grid-container"),
     stateMessage: document.querySelector("#state-msg"),
     restartButton: document.querySelector("#restart-game-btn"),
+    openModal: document.querySelector("#open-modal"),
+    modal: document.querySelector("#player-name-modal"),
+    formInput: document.querySelector("#player-custom-name"),
   };
 
   const players = {
@@ -16,6 +19,11 @@ const gameApp = (() => {
       name: "Player Two",
       token: "O",
       tokenCllct: [],
+    },
+
+    updateName() {
+      this.p1.name = document.getElementById("p1-name").value;
+      this.p2.name = document.getElementById("p2-name").value;
     },
   };
 
@@ -102,7 +110,7 @@ const gameApp = (() => {
 
   const messages = {
     initialMessage() {
-      DOM.stateMessage.textContent = `Player One turn`;
+      DOM.stateMessage.textContent = `${players.p1.name} turn`;
     },
 
     gameWin() {
@@ -147,8 +155,6 @@ const gameApp = (() => {
       );
 
       gameLogic.winningState ? messages.gameWin() : messages.playerTurn();
-    } else {
-      return;
     }
   };
 
@@ -168,8 +174,20 @@ const gameApp = (() => {
     DOM.restartButton.addEventListener("click", () => {
       restartGame();
     });
+
     DOM.gridContainer.addEventListener("click", (event) => {
       gameFlow(event);
+    });
+
+    DOM.openModal.addEventListener("click", () => {
+      DOM.modal.showModal();
+    });
+
+    DOM.formInput.addEventListener("submit", (event) => {
+      event.preventDefault();
+      players.updateName();
+      DOM.modal.close();
+      restartGame();
     });
   };
 

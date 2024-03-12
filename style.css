@@ -191,10 +191,60 @@ main {
   }
 }
 
-#restart-game-btn {
+.btn-container {
+  display: flex;
+  gap: var(--s1);
+}
+
+.btn {
   padding: var(--s1) var(--s075);
   border: none;
   border-radius: var(--s1);
   cursor: pointer;
   font-family: var(--ff-main);
+}
+
+.grid-container-modal {
+  position: fixed; /* Stay in place */
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Apply a negative transform */
+  padding: var(--s3);
+  border: none;
+  border-radius: var(--s1);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--s1);
+  background-color: var(--clr-main-100);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  .field-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  label {
+    font-family: var(--ff-main);
+    font-weight: var(--fw-m);
+    font-size: var(--s11);
+  }
+  input {
+    font-family: var(--ff-main);
+    padding: var(--s025);
+    border: 1px solid var(--clr-neutral-500);
+    border-radius: var(--s025);
+    margin-top: var(--s025);
+  }
+
+  .btn[type="reset"] {
+    background-color: var(--clr-accent-red);
+    color: var(--clr-neutral-900);
+    font-weight: var(--fw-l);
+  }
+
+  .btn[type="submit"] {
+    background-color: var(--clr-accent-blue);
+    color: var(--clr-neutral-900);
+    font-weight: var(--fw-l);
+  }
 }
